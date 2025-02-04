@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alkane Molecule Visualization</title>
+    <style>
+        body {
+            font-family:Verdana, Geneva, Tahoma, sans-serif;
+            text-align: center;
+            margin: 60px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+            padding: 20px;
+            margin: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px; /* Limit the width of the input container */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px; /* Limit the width of the input container */
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%; /* Make it responsive */
+        }
+
+        label {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        #carbonNumber {
+            width: 60px;          
+            font-size: 20px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            margin: 10px 0;
+            padding: 15px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #fdb500;
+            font-size: 30px;
+           
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #molecule {
+            margin: 20px;
+            padding: ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 20px;
+            background-color: #ffcc00;
+            border-radius: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            max-width: 100%; /* Allow the molecule container to scale */
+            overflow: auto; /* Enable scrolling if necessary */
+        }
+
+        .carbon-group {
+            position: relative;
+            width: 10vw; /* Use viewport width for responsive sizing */
+            height: 10vw; /* Use viewport width for responsive sizing */
+            max-width: 100px; /* Limit maximum size */
+            max-height: 100px; /* Limit maximum size */
+            display: inline-block;
+            margin: 5px; /* Adjust margin for better spacing */
+        }
+
+        .carbon {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #dc3545;
+            color: white;
+            font-weight: 800;
+            border-radius: 50%;
+            width: 50%; /* Use percentage for responsive sizing */
+            height: 50%; /* Use percentage for responsive sizing */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .hydrogen {
+            position: absolute;
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 25%; /* Use percentage for responsive sizing */
+            height: 25%; /* Use percentage for responsive sizing */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .bond {
+            background-color: #28a745;
+            height: 4px;
+            align-self: center;
+            flex-grow: 1;
+            margin: 0 5px;
+        }
+
+        @media (max-width: 600px) {
+            .carbon-group {
+                width: 15vw; /* Increase size for smaller screens */
+                height: 15vw; /* Increase size for smaller screens */
+            }
+
+            .carbon {
+                width: 60%; /* Adjust carbon size */
+                height: 60%; /* Adjust carbon size */
+            }
+
+            .hydrogen {
+                width: 30%; /* Adjust hydrogen size */
+                height: 30%; /* Adjust hydrogen size */
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Alkane Molecule Visualization</h1>
+    
+    <div class="input-container">
+        <label for="carbonNumber">Enter a number (1-20):</label>
+        <input type="number" id="carbonNumber" min="1" max="20">
+        <button onclick="drawMolecule()">Draw Molecule</button>
+    </div>
+
+    <div id="molecule"></div>
+
+    <script>
+        function drawMolecule() {
+            const carbonNumber = parseInt(document.getElementById('carbonNumber').value);
+            const moleculeContainer = document.getElementById('molecule');
+            moleculeContainer.innerHTML = '';
+
+            if (isNaN(carbonNumber) || carbonNumber < 1 || carbonNumber > 20) {
+                alert("Please enter a valid number between 1 and 20.");
+                return;
+            }
+
+            for (let i = 0; i < carbonNumber; i++) {
+                const carbonGroup = document.createElement('div');
+                carbonGroup.className = 'carbon-group';
+
+                const carbon = document.createElement('div');
+                carbon.className = 'carbon';
+                carbon.textContent = 'C';
+                carbonGroup.appendChild(carbon);
+
+                const hydrogenCount = carbonNumber === 1 ? 4 : (i === 0 || i === carbonNumber - 1) ? 3 : 2;
+
+                for (let j = 0; j < hydrogenCount; j++) {
+                    const hydrogen = document.createElement('div');
+                    hydrogen.className = 'hydrogen';
+                    hydrogen.textContent = 'H';
+
+                    if (carbonNumber === 1) {
+                        switch(j) {
+                            case 0:
+                                hydrogen.style.top = '0%';
+                                hydrogen.style.left = '50%';
+                                hydrogen.style.transform = 'translate(-50%, -100%)';
+                                break;
+                            case 1:
+                                hydrogen.style.right = '0%';
+                                hydrogen.style.top = '50%';
+                                hydrogen.style.transform = 'translate(100%, -50%)';
+                                break;
+                            case 2:
+                                hydrogen.style.bottom = '0%';
+                                hydrogen.style.left = '50%';
+                                hydrogen.style.transform = 'translate(-50%, 100%)';
+                                break;
+                            case 3:
+                                hydrogen.style.left = '0%';
+                                hydrogen.style.top = '50%';
+                                hydrogen.style.transform = 'translate(-100%, -50%)';
+                                break;
+                        }
+                    } else {
+                        if (i === 0) {
+                            switch(j) {
+                                case 0:
+                                    hydrogen.style.left = '0%';
+                                    hydrogen.style.top = '50%';
+                                    hydrogen.style.transform = 'translate(-100%, -50%)';
+                                    break;
+                                case 1:
+                                    hydrogen.style.top = '0%';
+                                    hydrogen.style.left = '50%';
+                                    hydrogen.style.transform = 'translate(-50%, -100%)';
+                                    break;
+                                case 2:
+                                    hydrogen.style.bottom = '0%';
+                                    hydrogen.style.left = '50%';
+                                    hydrogen.style.transform = 'translate(-50%, 100%)';
+                                    break;
+                            }
+                        } else if (i === carbonNumber - 1) {
+                            switch(j) {
+                                case 0:
+                                    hydrogen.style.right = '0%';
+                                    hydrogen.style.top = '50%';
+                                    hydrogen.style.transform = 'translate(100%, -50%)';
+                                    break;
+                                case 1:
+                                    hydrogen.style.top = '0%';
+                                    hydrogen.style.left = '50%';
+                                    hydrogen.style.transform = 'translate(-50%, -100%)';
+                                    break;
+                                case 2:
+                                    hydrogen.style.bottom = '0%';
+                                    hydrogen.style.left = '50%';
+                                    hydrogen.style.transform = 'translate(-50%, 100%)';
+                                    break;
+                            }
+                        } else {
+                            switch(j) {
+                                case 0:
+                                    hydrogen.style.top = '0%';
+                                    hydrogen.style.left = '50%';
+                                    hydrogen.style.transform = 'translate(-50%, -100%)';
+                                    break;
+                                case 1:
+                                    hydrogen.style.bottom = '0%';
+                                    hydrogen.style.left = '50%';
+                                    hydrogen.style.transform = 'translate(-50%, 100%)';
+                                    break;
+                            }
+                        }
+                    }
+
+                    carbonGroup.appendChild(hydrogen);
+                }
+
+                moleculeContainer.appendChild(carbonGroup);
+
+                if (i < carbonNumber - 1) {
+                    const bond = document.createElement('div');
+                    bond.className = 'bond';
+                    moleculeContainer.appendChild(bond);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
